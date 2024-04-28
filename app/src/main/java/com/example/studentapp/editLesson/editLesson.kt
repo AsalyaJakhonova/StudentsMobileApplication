@@ -1,4 +1,4 @@
-package com.example.studentapp.addnew
+package com.example.studentapp.editLesson
 
 import android.content.Intent
 import androidx.compose.foundation.background
@@ -35,98 +35,81 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.studentapp.ListActivity
-import com.example.studentapp.data.network.LessonRepository
 import com.example.studentapp.models.Lesson
 import com.example.teachersapp.R
 import java.time.Duration
 
 @Composable
-fun AddNewLesson(
-    onNewLessonAdded: (Lesson) -> Unit,
-    viewModel: AddNewLessonViewModel= AddNewLessonViewModel(LessonRepository())
+fun EditLesson(
+    lesson: Lesson?,
+    onLessonEdited: (Lesson) -> Unit,
 ){
-    val context = LocalContext.current
-    val id = remember {
-        mutableStateOf("")
-    }
-    val studentName = remember {
-        mutableStateOf("")
-    }
-    val lessonType = remember {
-        mutableStateOf("")
-    }
-    val duration = remember {
-        mutableStateOf("")
-    }
-    val dateTime = remember {
-        mutableStateOf("")
-    }
-    val response by viewModel.insertResponseLiveData.observeAsState()
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.White)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            CreateNewLessonPageTitle()
-            IdInput(id = id.value, onIdChange = { id.value = it })
-            Spacer(Modifier.height(16.dp))
-            StudentNameInput(
-                studentName = studentName.value,
-                onStudentNameChange = { studentName.value = it })
-            Spacer(Modifier.height(16.dp))
-            LessonTypeInput(
-                lessonType = lessonType.value,
-                onLessonTypeChange = { lessonType.value = it })
-            Spacer(Modifier.height(16.dp))
-            DurationTypeInput(
-                duration = duration.value,
-                onDurationChange = { duration.value = it })
-            Spacer(Modifier.height(16.dp))
-            DateTimeInput(
-                dateTime = dateTime.value,
-                onDateTimeChange = { dateTime.value = it })
-            Spacer(Modifier.height(16.dp))
-
-
-            AddNewButton {
-                onNewLessonAdded(
-                    Lesson(
-                        id.value,
-                        studentName.value,
-                        lessonType.value,
-                        dateTime.value,
-                        duration.value
-                    )
-                )
-            }
+    if (lesson != null) {
+        val id = remember {
+            mutableStateOf(lesson.Id)
+        }
+        val teacherName = remember {
+            mutableStateOf(lesson.TeacherName)
+        }
+        val lessonType = remember {
+            mutableStateOf(lesson.LessonType)
+        }
+        val duration = remember {
+            mutableStateOf(lesson.Duration)
+        }
+        val dateTime = remember {
+            mutableStateOf(lesson.DateTime)
         }
 
-        if (response != null) {
-            Text(
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .padding(20.dp)
-                    .align(Alignment.Center),
-                fontSize = 19.sp,
-                text = if (response!!.status == "OK") stringResource(id = R.string.saved_success_msg)
-                else stringResource(id = R.string.saved_fail_msg)
-            )
+                    .fillMaxWidth()
+                    .background(color = Color.White)
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                EditLessonPageTitle()
+                IdInput(id = id.value, onIdChange = { id.value = it })
+                Spacer(Modifier.height(16.dp))
+                TeacherNameInput(
+                    teacherName = teacherName.value,
+                    onTeacherNameChange = { teacherName.value = it })
+                Spacer(Modifier.height(16.dp))
+                LessonTypeInput(
+                    lessonType = lessonType.value,
+                    onLessonTypeChange = { lessonType.value = it })
+                Spacer(Modifier.height(16.dp))
+                DurationTypeInput(
+                    duration = duration.value,
+                    onDurationChange = { duration.value = it })
+                Spacer(Modifier.height(16.dp))
+                DateTimeInput(
+                    dateTime = dateTime.value,
+                    onDateTimeChange = { dateTime.value = it })
+                Spacer(Modifier.height(16.dp))
 
-            if (response!!.status == "OK") {
-                context.startActivity(Intent(context, ListActivity::class.java))
+
+                AddNewButton {
+                    onLessonEdited(
+                        Lesson(
+                            id.value,
+                            teacherName.value,
+                            lessonType.value,
+                            dateTime.value,
+                            duration.value
+                        )
+                    )
+                }
             }
         }
     }
-
 }
 @Composable
-private fun CreateNewLessonPageTitle() {
+private fun EditLessonPageTitle() {
     Text(
         modifier = Modifier.fillMaxWidth(),
-        text = stringResource(id = R.string.title_activity_add_new_lesson),
+        text = stringResource(id = R.string.title_activity_edit_lesson),
         color = Color.Black,
         fontSize = 26.sp,
         fontFamily = FontFamily.Serif,
@@ -150,14 +133,14 @@ private fun IdInput(id: String, onIdChange: (String) -> Unit){
     )
 }
 @Composable
-private fun StudentNameInput(studentName: String, onStudentNameChange: (String) -> Unit) {
+private fun TeacherNameInput(teacherName: String, onTeacherNameChange: (String) -> Unit) {
     TextField(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.LightGray),
-        value = studentName,
+        value = teacherName,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-        onValueChange = { onStudentNameChange(it) },
+        onValueChange = { onTeacherNameChange(it) },
         label = {
             Text(stringResource(id = R.string.lesson_teacherName_input_hint))
         }

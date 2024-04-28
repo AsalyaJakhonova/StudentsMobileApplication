@@ -1,7 +1,9 @@
 package com.example.studentapp.detailedView
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
@@ -14,19 +16,22 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.studentapp.data.network.LessonRepository
+import com.example.teachersapp.R
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import com.example.teachersapp.R
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material3.Button
+import com.example.studentapp.models.Lesson
+
 
 @Composable
 fun DetailedView(
-    lessonId: String,
-    viewModel: DetailedViewModel = DetailedViewModel(lessonId, LessonRepository())
+    lesson: Lesson?,
+    onDeleteClick: () -> Unit,
+    onEditClick: () -> Unit
 ){
-    val lesson by viewModel.lessonLiveData.observeAsState()
     if (lesson != null) {
         Column (modifier = Modifier
             .fillMaxSize()
@@ -44,7 +49,14 @@ fun DetailedView(
             if (lesson!!.Duration != null) {
                 Duration(duration = lesson!!.Duration!!)
             }
-
+            Row() {
+                Button(onClick = { onDeleteClick() }) {
+                    Text("Delete")
+                }
+                Button(onClick = { onEditClick() }) {
+                    Text("Edit")
+                }
+            }
         }
     }
 }

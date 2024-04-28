@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.studentapp.data.network.LessonRepository
@@ -34,6 +35,7 @@ import com.example.teachersapp.R
 @Composable
 fun LessonsList(
     viewModel: LessonListViewModel = LessonListViewModel(LessonRepository()),
+    lessons: List<Lesson>,
     onAddNewLessonClick: ()->Unit,
     onLessonClick: (String)-> Unit = {},
 ) {
@@ -41,13 +43,11 @@ fun LessonsList(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val movies by viewModel.lessonsLiveData.observeAsState()
-
-        if (!movies.isNullOrEmpty()) {
+        if (!lessons.isNullOrEmpty()) {
             LazyColumn(modifier = Modifier
                 .fillMaxHeight()
-                .padding(0.dp, 0.dp, 0.dp, 90.dp)) {
-                items(items = movies!!.toList(), itemContent = { item ->
+                .padding(20.dp, 20.dp, 20.dp, 90.dp)) {
+                items(items = lessons!!.toList(), itemContent = { item ->
                     LessonItem(lesson = item, onLessonClick)
                 })
             }
@@ -77,9 +77,9 @@ fun LessonsList(
             }
 
 
-            }
         }
     }
+}
 
 
 @Composable
@@ -130,6 +130,6 @@ fun LessonItemDesc(desc: String){
         fontSize = 10.sp,
         fontFamily = FontFamily.Serif
 
-        )
+    )
 
 }

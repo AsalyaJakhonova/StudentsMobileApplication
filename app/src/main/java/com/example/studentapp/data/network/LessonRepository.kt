@@ -6,8 +6,10 @@ import com.example.studentapp.data.network.lesson.LessonResponse
 import com.example.studentapp.models.Lesson
 
 
+
+
 class LessonRepository{
-        suspend fun getLessonList(): List<Lesson>{
+    suspend fun getLessonList(): List<Lesson>{
         val lessons = mutableListOf<Lesson>()
         try {
 
@@ -17,7 +19,7 @@ class LessonRepository{
             val lessonsFromResponse = response.data
             if (lessonsFromResponse != null) {
                 for (lessonsFromResponse in lessonsFromResponse) {
-                    if (lessonsFromResponse.TeacherName != null) {
+                    if (lessonsFromResponse.TeacherName!= null) {
                         lessons.add(
                             Lesson(
                                 lessonsFromResponse.Id,
